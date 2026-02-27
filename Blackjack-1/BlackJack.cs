@@ -1,15 +1,17 @@
 ﻿using System;
 
 class BlackJack
-{
-    Random rand = new Random();
-
+{    
     private string[] _card = new string[52];
     private string _name;
-    private bool _isStand = false;
     private int _total = 0;
     private int _count = 0;
 
+    public string DealerFirstCard => _card[0];
+
+    public bool HasA = false;
+    public bool IsAEleven = false;
+    
     public string Name => _name;
     public string Card => _card[_count - 1];
 
@@ -27,16 +29,9 @@ class BlackJack
         switch (_card[_count].Substring(1))
         {
             case "A":
-                if (_total + 11 <= 21)
-                {
-                    _total += 11;
-                    break;
-                }
-                else
-                {
-                    _total += 1;
-                    break;
-                }
+                _total += 1;
+                HasA = true;
+                break;
             case "2":
                 _total += 2;
                 break;
@@ -77,6 +72,8 @@ class BlackJack
                 break;
         }
 
+        CalculateA();
+
         _count++;
     }
 
@@ -98,5 +95,25 @@ class BlackJack
         Console.WriteLine($"{_name}의 점수: {_total}");
     }
 
+    public void DealerFirstShowInfo()
+    {
+        Console.Write($"{_name}의 패: [??] [{_card[1]}]");
+        Console.WriteLine();
+        Console.WriteLine($"{_name}의 점수: ?");
+    }
 
+    public void CalculateA()
+    {
+        if (HasA == true && (_total + 10 <= 21))
+        {
+            _total += 10;
+            IsAEleven = true;
+        }
+
+        else if (IsAEleven == true && (_total > 21))
+        {
+            _total -= 10;
+            IsAEleven = false;
+        }
+    }
 }
